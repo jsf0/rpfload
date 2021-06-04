@@ -9,7 +9,7 @@ If you have ever made a mistake in pf.conf and locked yourself out or caused oth
 You can accomplish something similar with a simple shell one-liner like this:
 
 ```
-pfctl -f /etc/pf.conf && sleep 60 && pfctl -d
+# pfctl -f /etc/pf.conf && sleep 60 && pfctl -d
 ```
 
 This will load /etc/pf.conf, wait 60 seconds, then disable the firewall. 
@@ -39,7 +39,7 @@ This will run `pfctl -f /etc/pf.conf`, wait 60 seconds (the default timeout leng
 You can also replace the config file with a backup on timeout. This will require a backup configuration file that will be applied after the timeout is reached. A simple usage example might look like this:
  
 ```
-rpfload -f /etc/pf.conf -b /etc/pf.conf.backup
+# rpfload -f /etc/pf.conf -b /etc/pf.conf.backup
 ```
 
 This will run `pfctl -f /etc/pf.conf`, wait 60 seconds, then run `pfctl -f /etc/pf.conf.backup`. If you Ctrl-C or kill the process' PID before the 60 seconds have passed, the current configuration will be kept and it will not revert to the backup.
@@ -49,7 +49,7 @@ rpfload will helpfully print its own PID, so you can run it in the background an
 You can also tell rpfload to overwrite the live config with the backup config file when reverting with the -o flag:
 
 ```
-rpfload -o -f /etc/pf.conf -b /etc/pf.conf.backup
+# rpfload -o -f /etc/pf.conf -b /etc/pf.conf.backup
 ```
 
 This will load /etc/pf.conf, wait 60 seconds, then load /etc/pf.conf.backup and copy /etc/pf.conf.backup to /etc/pf.conf, replacing it.. 
