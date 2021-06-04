@@ -8,7 +8,6 @@ If you have ever made a mistake in pf.conf and locked yourself out or caused oth
 
 To install rpfload and its man page, run:
 ```
-
 # ./install.sh
 ```
 
