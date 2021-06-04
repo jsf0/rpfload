@@ -37,7 +37,7 @@ GetOptions(
 ) or die "Error parsing command line arguments";
 
 if ( $help ) {
-    print ( "Usage:\n\trpfload [-t seconds] [-o] -f live_config -b backup_config\n\n" );
+    print ( "Usage:\n\trpfload [-t seconds] [-o] -f live_config -b backup_config\n\trpfload [-t seconds] -d -f live_config\n\n" );
     exit;
 }
 
