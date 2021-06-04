@@ -72,9 +72,10 @@ if ( $? != 0 ) {
     die "Error: pfctl failed to load live configuration";
 }
 
-setlogsock ("unix");
+setlogsock ( "unix" );
 openlog ( basename ( $0 ), "pid", "local3" );
 syslog ( "warning", "loaded PF configuration at %s", $live_config );
+
 print ( "rpfload: loaded live configuration at $live_config\n" );
 
 if ( $disable ) {
