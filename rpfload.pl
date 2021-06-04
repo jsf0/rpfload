@@ -19,6 +19,7 @@ use warnings;
 use Getopt::Long;
 use Sys::Syslog qw(:DEFAULT setlogsock);
 use File::Basename;
+use OpenBSD::Pledge;
 
 my $live_config;
 my $backup_config;
@@ -26,6 +27,9 @@ my $time;
 my $overwrite = 0;
 my $disable = 0;
 my $help = 0;
+
+pledge ( qw ( rpath unix proc exec ))
+    or die "Unable to pledge: $!";
 
 GetOptions(
     "live_config|f=s" => \$live_config,
@@ -68,8 +72,8 @@ if ( $? != 0 ) {
     die "Error: pfctl failed to load live configuration";
 }
 
-setlogsock("unix");
-openlog(basename($0), "pid", "local3");
+setlogsock ("unix");
+openlog ( basename ( $0 ), "pid", "local3" );
 syslog ( "warning", "loaded PF configuration at %s", $live_config );
 print ( "rpfload: loaded live configuration at $live_config\n" );
 
@@ -84,7 +88,7 @@ if ( $overwrite ) {
     print ( "rpfload: overwrite requested, will replace $live_config with $backup_config unless cancelled\n" );
 }
 
-sleep($time);
+sleep ( $time );
 
 if ( $disable ) {
     system ( "/sbin/pfctl -d" );
