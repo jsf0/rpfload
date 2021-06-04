@@ -17,17 +17,21 @@ use strict;
 use warnings;
 
 use Getopt::Long;
+use Sys::Syslog qw(:DEFAULT setlogsock);
+use File::Basename;
 
 my $live_config;
 my $backup_config;
 my $time;
 my $overwrite = 0;
+my $disable = 0;
 my $help = 0;
 
 GetOptions(
     "live_config|f=s" => \$live_config,
     "backup_config|b=s" => \$backup_config,
     "o" => \$overwrite,
+    "d" => \$disable,
     "h" => \$help,
     "time|t=i" => \$time
 ) or die "Error parsing command line arguments";
@@ -41,8 +45,16 @@ if ( !$live_config ) {
     die "Error: no live configuration specified";
 }
 
-if ( !$backup_config ) { 
+if ( !$backup_config && !$disable ) { 
     die "Error: no backup configuration specified";
+}
+
+if ( $disable && $overwrite ) {
+    die "Error: -d and -o are mutually exclusive";
+}
+
+if ( $disable && $backup_config ) {
+    die "Error: -d and -b are mutually exclusive";
 }
 
 if ( !$time ) {
@@ -51,12 +63,22 @@ if ( !$time ) {
 
 system ( '/sbin/pfctl', '-f', $live_config);
 
+
 if ( $? != 0 ) {
     die "Error: pfctl failed to load live configuration";
 }
 
+setlogsock("unix");
+openlog(basename($0), "pid", "local3");
+syslog ( "warning", "loaded PF configuration at %s", $live_config );
 print ( "rpfload: loaded live configuration at $live_config\n" );
-print ( "rpfload: reverting to $backup_config in $time seconds. Kill process $$ to cancel and keep current configuration\n" );
+
+if ( $disable ) {
+    print ( "rpfload: disabling pf in $time seconds\n");
+} else {
+    print ( "rpfload: reverting to $backup_config in $time seconds.\n" );
+}
+print( "Kill process $$ to cancel and keep current configuration\n" );
 
 if ( $overwrite ) {
     print ( "rpfload: overwrite requested, will replace $live_config with $backup_config unless cancelled\n" );
@@ -64,18 +86,29 @@ if ( $overwrite ) {
 
 sleep($time);
 
-system ( '/sbin/pfctl', '-f', $backup_config);
-
-if ( $? != 0 ) {
-    die "Error: pfctl failed to load backup configuration";
+if ( $disable ) {
+    system ( "/sbin/pfctl -d" );
+    if ( $? !=0 ) {
+	die "Error: pfctl could not disable pf";
+    }
+    syslog ( "warning", "Timeout reached, disabled PF" );
+    print ( "rpfload: disabled pf\n");
+} else {
+    system ( '/sbin/pfctl', '-f', $backup_config);
+    if ( $? != 0 ) {
+	die "Error: pfctl could not load backup configuration";
+    }
+    syslog ( "warning", "reverted configuration to backup at %s", $backup_config );
+    print ( "rpfload: reverted configuration to backup at $backup_config\n" );
 }
-
-print ( "rpfload: reverted configuration to backup at $backup_config\n" );
 
 if ( $overwrite ) {
     system ( '/bin/cp', $backup_config, $live_config );
     if ($? != 0 ) {
 	die "Error: failed to overwrite $live_config with $backup_config";
     }
+    syslog ( "warning", "Overwrote %s with %s", $live_config, $backup_config );
     print ( "rpfload: overwrote $live_config with $backup_config\n" );
 }
+
+closelog();

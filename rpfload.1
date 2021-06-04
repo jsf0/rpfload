@@ -24,6 +24,10 @@
 .Op Fl t Ar seconds
 .Fl f Ar live_config
 .Fl b Ar backup_config
+.Nm
+.Op Fl t Ar seconds
+.Fl d
+.Fl f Ar live_config
 .Sh DESCRIPTION
 The
 .Nm
@@ -37,9 +41,11 @@ The PF config file to apply immediately.
 .It Fl b Ar backup_config
 The backup PF config file. This will be applied automatically after 60 seconds,
 or whatever time was chosen with the -t option. If -o was also given,
-it will be copied to the live_config file location, overwriting it.
+it will be copied to the live_config file location, overwriting it. This is muutually exclusive with -d
+.It Fl d
+Disable PF instead of replacing config files. This is mutually exclusive with -b and -o
 .It Fl o
-When reverting config files, also overwrite the live config file location with the backup.
+When reverting config files, also overwrite the live config file location with the backup. Mutually exclusive with -d
 .It Fl t
 The time to wait in seconds before reverting configurations.
 .El
@@ -47,9 +53,18 @@ The time to wait in seconds before reverting configurations.
 .Pp
 A simple example is below:
 .Pp
+.Dl # rpfload -f /etc/pf.conf -d
+.Pp
+This will instruct 
+.Nm
+to run 'pfctl -f /etc/pf.conf' to load the /etc/pf.conf ruleset, wait 60 seconds, and disable the firewall if the
+process has not been terminated before the timeout is reached.
+.Pp
 .Dl # rpfload -f /etc/pf.conf -b /etc/pf.conf.backup 
 .Pp
-This will run instruct rpfload to run 'pfctl -f /etc/pf.conf', wait 60 seconds, then if the process has not been terminated,
+This will run instruct
+.Nm
+to run 'pfctl -f /etc/pf.conf', wait 60 seconds, then if the process has not been terminated,
 run 'pfctl -f /etc/pf.conf.backup'.
 .Pp
 .Dl # rpfload -t 30 -o -f /etc/pf.conf -b /etc/pf.conf.backup
