@@ -65,15 +65,16 @@ if ( !$time ) {
     $time = 60;
 }
 
-system ( '/sbin/pfctl', '-f', $live_config);
-
-
-if ( $? != 0 ) {
+if ( $? != 0 ) { 
     die "Error: pfctl failed to load live configuration";
 }
 
 setlogsock ( "unix" );
-openlog ( basename ( $0 ), "pid", "local3" );
+openlog ( basename ( $0 ), "pid", "local3" )
+    or die "Could not open syslog";
+
+system ( '/sbin/pfctl', '-f', $live_config);
+
 syslog ( "warning", "loaded PF configuration at %s", $live_config );
 
 print ( "rpfload: loaded live configuration at $live_config\n" );
