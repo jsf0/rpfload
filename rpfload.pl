@@ -79,7 +79,7 @@ if ( !$disable ) {
     system ( '/sbin/pfctl', '-nf', $backup_config );
     if ( $? != 0 ) { 
         syslog ( "warning", "errors detected in %s, exiting without taking any action", $backup_config );
-        die "Error: pfctl detected errors in $backup_config, not loading it";
+        die "Error: pfctl detected errors in $backup_config, quitting now without taking any action";
     }   
 }
 
