@@ -107,7 +107,7 @@ if ( $disable ) {
     print ( "rpfload: reverting to $backup_config in $time seconds.\n" );
 }
 
-print( "Kill process $$ to cancel and keep current configuration\n" );
+print( "Ctrl-C or kill process $$ to cancel rollback and keep current configuration\n" );
 
 if ( $overwrite ) {
     print ( "rpfload: overwrite requested, will replace $live_config with $backup_config unless cancelled\n" );
