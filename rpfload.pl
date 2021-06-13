@@ -76,17 +76,23 @@ openlog ( basename ( $0 ), "pid", "local3" )
 # First, check the backup file for errors, if we're using one.
 # If that fails, log it and die now, because we don't want to continue
 if ( !$disable ) {
+    print ( "Checking backup config for syntax errors...\n" );
     system ( '/sbin/pfctl', '-nf', $backup_config );
     if ( $? != 0 ) { 
         syslog ( "warning", "errors detected in %s, exiting without taking any action", $backup_config );
         die "Error: pfctl detected errors in $backup_config, quitting now without taking any action";
+    } else {
+	print ( "Backup config OK\n\n" );
     }   
 }
 
 # We'll check the live config file for syntax errors too. 
 # If that fails, die immediately because pfctl will fail to load it anyway. 
 # Then, load the live config and log it.
-system ( '/sbin/pfctl', '-nf', $live_config );
+print ( "rpfload: Checking live config for syntax errors. Config we are loading is below (verbose):\n" );
+print ( "\n--------\n" );
+system ( '/sbin/pfctl', '-nvvf', $live_config );
+print ( "--------\n\n" );
 if ( $? != 0 ) {
     syslog ( "warning", "errors detected in %s, not loading it", $live_config );
     die "Error: pfctl detected errors in $live_config, not loading it";
