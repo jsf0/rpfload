@@ -1,6 +1,6 @@
 ## rpfload
 
-rpfload is a Perl script for applying pf firewall configurations on OpenBSD with automatic rollback to a backup pf.conf file after a configurable period of time.
+rpfload is a Perl script for applying pf firewall configurations with automatic rollback to a backup pf.conf file after a configurable period of time.
 
 If you have ever made a mistake in pf.conf and locked yourself out or caused other calamity, this can be helpful.
 
