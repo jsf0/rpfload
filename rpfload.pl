@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 # Copyright (c) 2021 Joseph Fierro <joe@kernelpanic.life>
 #
 # Permission to use, copy, modify, and distribute this software for any
@@ -19,7 +19,7 @@ use warnings;
 use Getopt::Long;
 use Sys::Syslog qw(:DEFAULT setlogsock);
 use File::Basename;
-use OpenBSD::Pledge;
+use if $^O eq 'openbsd', "OpenBSD::Pledge";
 
 my $live_config;
 my $backup_config;
@@ -28,8 +28,10 @@ my $overwrite = 0;
 my $disable = 0;
 my $help = 0;
 
+if ( $^O eq 'openbsd' ) {
 pledge ( qw ( rpath unix proc exec ))
     or die "Unable to pledge: $!";
+}
 
 GetOptions(
     "live_config|f=s" => \$live_config,
