@@ -12,8 +12,8 @@
 .\"WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 .\"ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 .\"OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-.Dd $Mdocdate: June 04 2021 $
-.Dt RPFLOAD 1
+.Dd $Mdocdate: June 29 2021 $
+.Dt RPFLOAD 8
 .Os
 .Sh NAME
 .Nm rpfload
@@ -44,12 +44,24 @@ The following options determine behavior:
 The PF config file to apply immediately.
 .It Fl b Ar backup_config
 The backup PF config file. This will be applied automatically after 60 seconds,
-or whatever time was chosen with the -t option. If -o was also given,
-it will be copied to the live_config file location, overwriting it. This is muutually exclusive with -d
+or whatever time was chosen with the
+.Fl t
+option.
+If
+.Fl o
+was also given, it will be copied to the live_config file location, overwriting it.
+This is mutually exclusive with
+.Fl d .
 .It Fl d
-Disable PF instead of replacing config files. This is mutually exclusive with -b and -o
+Disable PF instead of replacing config files.
+This is mutually exclusive with
+.Fl b
+and
+.Fl o .
 .It Fl o
-When reverting config files, also overwrite the live config file location with the backup. Mutually exclusive with -d
+When reverting config files, also overwrite the live config file location with the backup.
+Mutually exclusive with
+.Fl d .
 .It Fl t
 The time to wait in seconds before reverting configurations.
 .El
@@ -60,7 +72,9 @@ A simple example is below:
 .Pp
 This will instruct 
 .Nm
-to run 'pfctl -f /etc/pf.conf' to load the /etc/pf.conf ruleset, wait 60 seconds, and disable the firewall if the
+to run 'pfctl -f /etc/pf.conf' to load the
+.Pa /etc/pf.conf
+ruleset, wait 60 seconds, and disable the firewall if the
 process has not been terminated before the timeout is reached.
 .Pp
 .Dl # rpfload -f /etc/pf.conf -b /etc/pf.conf.backup 
@@ -73,6 +87,9 @@ run 'pfctl -f /etc/pf.conf.backup'.
 .Dl # rpfload -t 30 -o -f /etc/pf.conf -b /etc/pf.conf.backup
 .Pp
 This will do the same as the above, but will change the timeout to 30 seconds, and if the configuration
-reverts, it will also overwrite /etc/pf.conf with /etc/pf.conf.backup. 
+reverts, it will also overwrite
+.Pa /etc/pf.conf
+with
+.Pa /etc/pf.conf.backup .
 .Sh AUTHORS
 .An Joseph Fierro Aq Mt joe@kernelpanic.life
