@@ -33,10 +33,12 @@ loader with automatic rollback
 .Sh DESCRIPTION
 The
 .Nm
-tool uses pfctl to load a PF firewall configuration file and automatically rolls back
+tool uses
+.Xr pfctl 8
+to load a PF firewall configuration file and automatically rolls back
 to a backup configuraton file after a configurable amount of time, if its PID has not been
 killed or Ctrl-C pressed before the timeout period has expired.
-The following options determine behavior: 
+The following options determine behavior:
 .Bl -tag -width Dsssigfile
 .It Fl f Ar live_config
 The PF config file to apply immediately.
