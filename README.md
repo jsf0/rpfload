@@ -22,7 +22,7 @@ so you can check `/var/log/messages` and see exactly which config file it ended 
 
 To install rpfload and its man page, run:
 ```
-# ./install.sh
+# make install
 ```
 
 ### Usage
