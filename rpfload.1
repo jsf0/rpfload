@@ -71,7 +71,9 @@ A simple example is below:
 .Pp
 This will instruct 
 .Nm
-to run 'pfctl -f /etc/pf.conf' to load the /etc/pf.conf ruleset, wait 60 seconds, and disable the firewall if the
+to run 'pfctl -f /etc/pf.conf' to load the
+.Pa /etc/pf.conf
+ruleset, wait 60 seconds, and disable the firewall if the
 process has not been terminated before the timeout is reached.
 .Pp
 .Dl # rpfload -f /etc/pf.conf -b /etc/pf.conf.backup 
@@ -84,6 +86,9 @@ run 'pfctl -f /etc/pf.conf.backup'.
 .Dl # rpfload -t 30 -o -f /etc/pf.conf -b /etc/pf.conf.backup
 .Pp
 This will do the same as the above, but will change the timeout to 30 seconds, and if the configuration
-reverts, it will also overwrite /etc/pf.conf with /etc/pf.conf.backup. 
+reverts, it will also overwrite
+.Pa /etc/pf.conf
+with
+.Pa /etc/pf.conf.backup .
 .Sh AUTHORS
 .An Joseph Fierro Aq Mt joe@kernelpanic.life
