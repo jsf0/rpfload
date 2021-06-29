@@ -17,7 +17,9 @@
 .Os
 .Sh NAME
 .Nm rpfload
-.Nd PF configuration loader with automatic rollback
+.Nd
+.Xr pf.conf 5
+loader with automatic rollback
 .Sh SYNOPSIS
 .Nm rpfload
 .Op Fl o
@@ -31,10 +33,12 @@
 .Sh DESCRIPTION
 The
 .Nm
-tool uses pfctl to load a PF firewall configuration file and automatically rolls back
+tool uses
+.Xr pfctl 8
+to load a PF firewall configuration file and automatically rolls back
 to a backup configuraton file after a configurable amount of time, if its PID has not been
 killed or Ctrl-C pressed before the timeout period has expired.
-The following options determine behavior: 
+The following options determine behavior:
 .Bl -tag -width Dsssigfile
 .It Fl f Ar live_config
 The PF config file to apply immediately.
@@ -50,7 +54,6 @@ When reverting config files, also overwrite the live config file location with t
 The time to wait in seconds before reverting configurations.
 .El
 .Sh EXAMPLES
-.Pp
 A simple example is below:
 .Pp
 .Dl # rpfload -f /etc/pf.conf -d
@@ -71,6 +74,5 @@ run 'pfctl -f /etc/pf.conf.backup'.
 .Pp
 This will do the same as the above, but will change the timeout to 30 seconds, and if the configuration
 reverts, it will also overwrite /etc/pf.conf with /etc/pf.conf.backup. 
-.Pp
-.Sh AUTHOR
-Joseph Fierro <joe@kernelpanic.life>
+.Sh AUTHORS
+.An Joseph Fierro Aq Mt joe@kernelpanic.life
