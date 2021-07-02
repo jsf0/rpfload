@@ -29,8 +29,8 @@ my $disable = 0;
 my $help = 0;
 
 if ( $^O eq 'openbsd' ) {
-pledge ( qw ( rpath unix proc exec ))
-    or die "Unable to pledge: $!";
+	pledge ( qw ( rpath unix proc exec ))
+    	or die "Unable to pledge: $!";
 }
 
 GetOptions(
@@ -84,7 +84,7 @@ if ( !$disable ) {
         syslog ( "warning", "errors detected in %s, exiting without taking any action", $backup_config );
         die "Error: pfctl detected errors in $backup_config, quitting now without taking any action";
     } else {
-	print ( "Backup config OK\n\n" );
+		print ( "Backup config OK\n\n" );
     }   
 }
 
@@ -129,16 +129,16 @@ sleep ( $time );
 if ( $disable ) {
     system ( "/sbin/pfctl -d" );
     if ( $? !=0 ) {
-	syslog ( "warning", "pfctl could not disable pf, firewall still enabled" );
-	die "Error: pfctl could not disable pf";
+		syslog ( "warning", "pfctl could not disable pf, firewall still enabled" );
+		die "Error: pfctl could not disable pf";
     }
     syslog ( "warning", "Timeout reached, disabled PF" );
     print ( "rpfload: disabled pf\n");
 } else {
     system ( '/sbin/pfctl', '-f', $backup_config );
     if ( $? != 0 ) {
-	syslog ( "warning", "pfctl could not load backup configuration at %s", $backup_config );
-	die "Error: pfctl could not load backup configuration";
+		syslog ( "warning", "pfctl could not load backup configuration at %s", $backup_config );
+		die "Error: pfctl could not load backup configuration";
     }
     syslog ( "warning", "reverted PF configuration to backup at %s", $backup_config );
     print ( "rpfload: reverted PF configuration to backup at $backup_config\n" );
@@ -148,8 +148,8 @@ if ( $disable ) {
 if ( $overwrite ) {
     system ( '/bin/cp', $backup_config, $live_config );
     if ($? != 0 ) {
-	syslog ("warning", "failed to overwrite %s with %s", $live_config, $backup_config );
-	die "Error: failed to overwrite $live_config with $backup_config";
+		syslog ("warning", "failed to overwrite %s with %s", $live_config, $backup_config );
+		die "Error: failed to overwrite $live_config with $backup_config";
     }
     syslog ( "warning", "Overwrote %s with %s", $live_config, $backup_config );
     print ( "rpfload: overwrote $live_config with $backup_config\n" );
